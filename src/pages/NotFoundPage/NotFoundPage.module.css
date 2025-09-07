@@ -1,0 +1,13 @@
+.container {
+    padding: 50px 30px;
+    text-align: center;
+}
+
+.text {
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.link {
+    color: blue;
+}
