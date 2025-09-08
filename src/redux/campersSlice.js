@@ -1,11 +1,13 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { fetchCampers } from "./campersOps";
+import { createSlice } from '@reduxjs/toolkit';
+import { fetchCamperDetails, fetchCampers } from './campersOps';
 
-export const selectCampers = (state) => state.campers.items;
-export const selectIsLoading = (state) => state.campers.isLoading;
-export const selectError = (state) => state.campers.error;
+export const selectCampers = state => state.campers.items;
+export const selectSelectedItem = state => state.campers.selectedItem;
+export const selectTotal = state => state.campers.total;
+export const selectIsLoading = state => state.campers.isLoading;
+export const selectError = state => state.campers.error;
 
-const handlePending = (state) => {
+const handlePending = state => {
   state.isLoading = true;
 };
 
@@ -15,20 +17,32 @@ const handleRejected = (state, action) => {
 };
 
 const campersSlice = createSlice({
-  name: "campers",
+  name: 'campers',
   initialState: {
     items: [],
+    total: 0,
+    selectedItem: null,
     isLoading: false,
     error: null,
   },
-  extraReducers: (builder) => {
-    builder.addCase(fetchCampers.pending, handlePending);
-    builder.addCase(fetchCampers.fulfilled, (state, action) => {
-      state.loading = false;
-      state.error = null;
-      state.items.push(action.payload);
-    });
-    builder.addCase(fetchCampers.rejected, handleRejected);
+  extraReducers: builder => {
+    builder
+      .addCase(fetchCampers.pending, handlePending)
+      .addCase(fetchCampers.fulfilled, (state, action) => {
+        const { items, total, loadMoreType } = action.payload;
+        state.isLoading = false;
+        state.error = null;
+        state.items = loadMoreType ? [...state.items, ...items] : items || [];
+        state.total = total || 0;
+      })
+      .addCase(fetchCampers.rejected, handleRejected)
+      .addCase(fetchCamperDetails.pending, handlePending)
+      .addCase(fetchCamperDetails.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.error = null;
+        state.selectedItem = action.payload;
+      })
+      .addCase(fetchCamperDetails.rejected, handleRejected);
   },
 });
 

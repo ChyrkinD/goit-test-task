@@ -1,39 +1,36 @@
-import { Route, Routes } from "react-router";
-import { Suspense, lazy } from "react";
-import Header from "../Header/Header";
-import Loader from "../Loader/Loader";
-import "./App.css";
+import { Route, Routes } from 'react-router';
+import { Suspense, lazy } from 'react';
+import { Toaster } from 'react-hot-toast';
+import Header from '../Header/Header';
+import Loader from '../Loader/Loader';
 
-const LazyHeroPage = lazy(() => import("../../pages/Hero/Hero"));
-const LazyCatalogPage = lazy(() => import("../../pages/Catalog/Catalog"));
-const LazyCatalogItem = lazy(() =>
-  import("../../pages/CatalogItem/CatalogItem")
+const LazyHeroPage = lazy(() => import('../../pages/Hero/Hero'));
+const LazyCatalogPage = lazy(() => import('../../pages/Catalog/Catalog'));
+const LazyCatalogItemPage = lazy(() =>
+  import('../../pages/CatalogItem/CatalogItem')
 );
-const LazyCatalogFeatures = lazy(() =>
-  import("../CatalogFeatures/CatalogFeatures")
-);
-const LazyCatalogReviews = lazy(() =>
-  import("../CatalogReviews/CatalogReviews")
-);
+const LazyFeatures = lazy(() => import('../Features/Features'));
+const LazyReviews = lazy(() => import('../Reviews/Reviews'));
 const LazyNotFoundPage = lazy(() =>
-  import("../../pages/NotFoundPage/NotFoundPage")
+  import('../../pages/NotFoundPage/NotFoundPage')
 );
 
 function App() {
   return (
-    <div>
+    <div className="font-inter text-main text-base min-h-screen flex flex-col">
       <Header />
       <Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<LazyHeroPage />} />
           <Route path="/catalog" element={<LazyCatalogPage />} />
-          <Route path="/catalog/:id" element={<LazyCatalogItem />}>
-            <Route path="features" element={<LazyCatalogFeatures />} />
-            <Route path="reviews" element={<LazyCatalogReviews />} />
+          <Route path="/catalog/:camperId" element={<LazyCatalogItemPage />}>
+            <Route path="features" element={<LazyFeatures />} />
+            <Route path="reviews" element={<LazyReviews />} />
           </Route>
           <Route path="*" element={<LazyNotFoundPage />} />
         </Routes>
       </Suspense>
+      <Toaster position="top-center" reverseOrder={false} />
     </div>
   );
 }
