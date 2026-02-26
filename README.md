@@ -4,7 +4,7 @@
 
 ```bash
    git clone https://github.com/ChyrkinD/goit-test-task.git
-   cd goit-neo-react-final-project
+   cd goit-test-task
 ```
 
 2. **Install Dependencies**
